@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple To-Do App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        li.completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <input type="text" id="new-todo" placeholder="Add a new to-do">
+        <button onclick="addTodo()">Add</button>
+        <ul id="todo-list"></ul>
+    </div>
+    <script>
+        // Array to store the to-dos
+        let todos = [];
+
+        // Function to add a new to-do
+        function addTodo() {
+            const todoInput = document.getElementById('new-todo');
+            const todoText = todoInput.value;
+
+            if (todoText) {
+                todos.push({ text: todoText, completed: false });
+                todoInput.value = '';
+                renderTodos();
+            }
+        }
+
+        // Function to toggle the completed status of a to-do
+        function toggleComplete(index) {
+            todos[index].completed = !todos[index].completed;
+            renderTodos();
+        }
+
+        // Function to edit a to-do
+        function editTodo(index) {
+            const newText = prompt('Edit your to-do', todos[index].text);
+            if (newText) {
+                todos[index].text = newText;
+                renderTodos();
+            }
+        }
+
+        // Function to remove a to-do
+        function removeTodo(index) {
+            todos.splice(index, 1);
+            renderTodos();
+        }
+
+        // Function to render the to-do list
+        function renderTodos() {
+            const todoList = document.getElementById('todo-list');
+            todoList.innerHTML = '';
+
+            todos.forEach((todo, index) => {
+                const li = document.createElement('li');
+                li.className = todo.completed ? 'completed' : '';
+
+                const text = document.createElement('span');
+                text.textContent = todo.text;
+                text.onclick = () => toggleComplete(index);
+
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.onclick = () => editTodo(index);
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.onclick = () => removeTodo(index);
+
+                li.appendChild(text);
+                li.appendChild(editButton);
+                li.appendChild(removeButton);
+                todoList.appendChild(li);
+            });
+        }
+
+        // Initial rendering
+        renderTodos();
+    </script>
+</body>
+</html>
